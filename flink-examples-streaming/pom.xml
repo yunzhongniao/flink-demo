@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.yunzhong</groupId>
+        <artifactId>flink-demo</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>flink-examples-streaming</artifactId>
+    <name>flink-examples-streaming</name>
+
+    <packaging>jar</packaging>
+    <properties>
+        <scala.binary.version>2.12</scala.binary.version>
+        <flink.version>1.8.0</flink.version>
+        <jackson.version>2.7.9</jackson.version>
+        <flink.shaded.version>6.0</flink.shaded.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- core dependencies -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-twitter_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka-0.10_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-shaded-jackson</artifactId>
+            <version>${jackson.version}-${flink.shaded.version}</version>
+        </dependency>
+
+        <!-- test dependencies -->
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-test-utils_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-statebackend-rocksdb_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- self-contained jars for each example -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version><!--$NO-MVN-MAN-VER$ -->
+                <executions>
+                    <!-- Default Execution -->
+                    <execution>
+                        <id>default</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- Iteration -->
+                    <execution>
+                        <id>Iteration</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>Iteration</classifier>
+
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>org.apache.flink.streaming.examples.iteration.IterateExample</program-class>
+                                </manifestEntries>
+                            </archive>
+
+                            <includes>
+                                <include>org/apache/flink/streaming/examples/iteration/*.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+
+                    <!-- IncrementalLearning -->
+                    <execution>
+                        <id>IncrementalLearning</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>IncrementalLearning</classifier>
+
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>org.apache.flink.streaming.examples.ml.IncrementalLearningSkeleton</program-class>
+                                </manifestEntries>
+                            </archive>
+
+                            <includes>
+                                <include>org/apache/flink/streaming/examples/ml/*.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+
+                    <!-- WindowJoin -->
+                    <execution>
+                        <id>WindowJoin</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>WindowJoin</classifier>
+
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>org.apache.flink.streaming.examples.join.WindowJoin</program-class>
+                                </manifestEntries>
+                            </archive>
+
+                            <includes>
+                                <include>org/apache/flink/streaming/examples/join/*.class</include>
+                                <include>org/apache/flink/streaming/examples/utils/ThrottledIterator.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+
+                    <!-- Async I/O -->
+                    <execution>
+                        <id>AsyncIO</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>AsyncIO</classifier>
+
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>org.apache.flink.streaming.examples.async.AsyncIOExample</program-class>
+                                </manifestEntries>
+                            </archive>
+
+                            <includes>
+                                <include>org/apache/flink/streaming/examples/async/*.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+
+                    <!-- WordCountPOJO -->
+                    <execution>
+                        <id>WordCountPOJO</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>WordCountPOJO</classifier>
+
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>org.apache.flink.streaming.examples.wordcount.PojoExample</program-class>
+                                </manifestEntries>
+                            </archive>
+
+                            <includes>
+                                <include>org/apache/flink/streaming/examples/wordcount/PojoExample.class</include>
+                                <include>org/apache/flink/streaming/examples/wordcount/PojoExample$*.class</include>
+                                <include>org/apache/flink/streaming/examples/wordcount/util/WordCountData.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+
+                    <!-- WordCount -->
+                    <execution>
+                        <id>WordCount</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>WordCount</classifier>
+
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>org.apache.flink.streaming.examples.wordcount.WordCount</program-class>
+                                </manifestEntries>
+                            </archive>
+
+                            <includes>
+                                <include>org/apache/flink/streaming/examples/wordcount/WordCount.class</include>
+                                <include>org/apache/flink/streaming/examples/wordcount/WordCount$*.class</include>
+                                <include>org/apache/flink/streaming/examples/wordcount/util/WordCountData.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+
+                    <!-- SocketWindowWordCount -->
+                    <execution>
+                        <id>SocketWindowWordCount</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>SocketWindowWordCount</classifier>
+
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>org.apache.flink.streaming.examples.socket.SocketWindowWordCount</program-class>
+                                </manifestEntries>
+                            </archive>
+
+                            <includes>
+                                <include>org/apache/flink/streaming/examples/socket/SocketWindowWordCount.class</include>
+                                <include>org/apache/flink/streaming/examples/socket/SocketWindowWordCount$*.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+
+                    <!-- TopSpeedWindowing -->
+                    <execution>
+                        <id>TopSpeedWindowing</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>TopSpeedWindowing</classifier>
+
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>org.apache.flink.streaming.examples.windowing.TopSpeedWindowing</program-class>
+                                </manifestEntries>
+                            </archive>
+
+                            <includes>
+                                <include>org/apache/flink/streaming/examples/windowing/TopSpeedWindowing.class</include>
+                                <include>org/apache/flink/streaming/examples/windowing/TopSpeedWindowing$*.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+
+                    <!-- SessionWindowing -->
+                    <execution>
+                        <id>SessionWindowing</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>SessionWindowing</classifier>
+
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>org.apache.flink.streaming.examples.windowing.SessionWindowing</program-class>
+                                </manifestEntries>
+                            </archive>
+
+                            <includes>
+                                <include>org/apache/flink/streaming/examples/windowing/SessionWindowing.class</include>
+                                <include>org/apache/flink/streaming/examples/windowing/SessionWindowing$*.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -13,7 +13,13 @@
 	<packaging>pom</packaging>
 
 	<properties>
+        <java.version>1.8</java.version>
 		<flink.version>1.8.0</flink.version>
 		<scala.version>2.12</scala.version>
 	</properties>
+	<modules>
+		<module>test-demo</module>
+		<module>protobuf</module>
+		<module>shiro-demo</module>
+	</modules>
 </project>
